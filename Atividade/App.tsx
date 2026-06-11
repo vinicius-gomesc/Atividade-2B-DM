@@ -4,15 +4,16 @@ import { FlatList, Pressable, ScrollView, Text, View } from 'react-native';
 import { ItemCatalogo } from './src/components/ItemCatalogo/ItemCatalogo';
 import { styles } from './src/styles/styles';
 
+// Tipo que define a estrutura de uma música na lista
 type Item = {
   id: string;
   nome: string;
   descricao: string;
   categoria: string;
   duracao: string;
-  imagem?: string;
 };
 
+// Array de objetos: dados para popular a FlatList com 9 músicas de diferentes gêneros
 const itensCatalogo: Item[] = [
   {
     id: '1',
@@ -84,18 +85,23 @@ type AppState = {
   itemSelecionado: Item | null;
 };
 
+// Cria array de categorias únicas a partir dos itens (Todos, Rock, Pop, Rap, Pagode)
 const categorias = ['Todos', ...Array.from(new Set(itensCatalogo.map((item) => item.categoria)))];
 
+
 export default class App extends React.Component<Record<string, never>, AppState> {
+  // STATE da classe: controla categoria e item selecionado
   state: AppState = {
     categoriaSelecionada: 'Todos',
     itemSelecionado: null,
   };
 
+  // Método: atualiza STATE quando um item é selecionado
   selecionarItem = (item: Item) => {
     this.setState({ itemSelecionado: item });
   };
 
+  // Método: atualiza STATE quando uma categoria é selecionada
   selecionarCategoria = (categoria: string) => {
     this.setState({ categoriaSelecionada: categoria });
   };
@@ -134,6 +140,7 @@ export default class App extends React.Component<Record<string, never>, AppState
             contentContainerStyle={styles.chipsContent}
             showsHorizontalScrollIndicator={false}
           >
+            {/* Chips de categorias como botões: todos, rock, pop, rap, pagode */}
             {categorias.map((categoria) => {
               const ativa = categoria === categoriaSelecionada;
               return (
@@ -148,6 +155,7 @@ export default class App extends React.Component<Record<string, never>, AppState
             })}
           </ScrollView>
 
+          {/* FLATLIST - Renderiza lista de músicas filtradas */}
           <FlatList
             style={styles.list}
             data={itensFiltrados}
@@ -159,7 +167,6 @@ export default class App extends React.Component<Record<string, never>, AppState
                 descricao={item.descricao}
                 categoria={item.categoria}
                 duracao={item.duracao}
-                imagem={item.imagem}
                 onPress={() => this.selecionarItem(item)}
               />
             )}
